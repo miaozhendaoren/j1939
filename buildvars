@@ -1,0 +1,30 @@
+#OBJ=IMX
+OBJ=PC
+
+ROOT_DIR=/home/pp/j1939
+INC=${ROOT_DIR}/inc
+SRC=${ROOT_DIR}/src
+
+ifeq ($(OBJ), IMX)
+    CC      = arm-none-linux-gnueabi-gcc
+    LD      = arm-none-linux-gnueabi-gcc
+    AR      = arm-none-linux-gnueabi-ar
+    STRIP   = arm-none-linux-gnueabi-strip
+else 
+    CC      = gcc
+    LD      = gcc
+    AR      = ar
+    STRIP   = strip
+endif
+
+ARFLAGS = -rcs
+LFLAGS  = -Wall -O2 -pedantic -std=gnu99 -I${INC} -lpthread
+CFLAGS  = -c $(LFLAGS)
+MK      = make
+MKFLAGS = -C
+RM      = rm
+RMFLAGS = -rf
+CP      = cp
+CPFLAGS = -rf
+MV      = mv
+MVFLAGS = -f
