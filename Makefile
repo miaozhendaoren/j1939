@@ -7,10 +7,14 @@ J1939           = test_lib.o queue.o lib.o pl.o dl.o al.o
 
 all:distclean test
 
-test:$(OBJS) $(J1939)
+test: tag $(OBJS) $(J1939)
 	$(LD) $(LFLAGS) $(J1939) sender.o -o $(SENDER)
 	$(LD) $(LFLAGS) $(J1939) recver.o -o $(RECVER)
 	#./test.sh
+
+tag:
+	ctags -R
+	cscope -Rbkq
 
 $(OBJS): %.o: %.c
 	$(CC) $(CFLAGS) $< -o $@
@@ -20,6 +24,8 @@ $(J1939):
 	$(MV) $(MVFLAGS) src/*.o ./
 
 clean:
+	$(RM) $(RMFLAGS) cscope*
+	$(RM) $(RMFLAGS) tags
 	$(RM) $(RMFLAGS) *.a
 	$(RM) $(RMFLAGS) *.o
 	$(RM) $(RMFLAGS) $(SENDER) $(RECVER)
