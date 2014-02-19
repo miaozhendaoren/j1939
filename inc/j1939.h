@@ -10,6 +10,9 @@
 #define EEC1_PGN                (61444)
 #define TP_PGN                  (60416)
 
+/* 离合器 */
+#define CLUTCH_PGN              (65265)
+
 /* ECU地址 */
 #define PLATFORM_ADDR           (28)
 

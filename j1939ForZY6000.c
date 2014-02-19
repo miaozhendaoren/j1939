@@ -47,7 +47,8 @@ static void parse_a_line(const char *buf_line)
     make_can_from_text(&can, buf_line); 
     enqueue_can_to_rx_fifo(&can); 
     
-    pull_msg_from_stack(&recv_msg);
+    pull_msg_from_stack(&recv_msg); 
+    
 }
 
 static void make_can_from_text(CAN *can, const char *buf_line)
@@ -77,7 +78,9 @@ static void make_can_from_text(CAN *can, const char *buf_line)
     /* 小端 */
     for(i=0;i<8;i++)
     {
-        can->data[i] = data[7 - i];
-    }
+        can->data[i] = (unsigned char)(data[7 - i]);
+    } 
+    
+    //print_can(can);
 }
 

@@ -187,9 +187,25 @@ static INT32 parse_msg(RECVED_MSG *ptr_recved_msg, const MSG *ptr_msg)
         case REQUEST_PGN:
         case DECLARE_ADDR_PGN:
         case TP_PGN:
+        case CLUTCH_PGN:
+            {
+                /* pgn 598 */
+                int press = (0x40 & ptr_msg->data[5]);
+                if(press)
+                {
+                    printf("clutch down.\n");
+                }
+                else
+                {
+                    printf("clutch up.\n");
+                }
+                break;
+            }
         default:
             {
-                printf("%s,%d:not Implement this msg pgn:%d\n", __FILE__, __LINE__, ptr_msg->pgn);
+                //print_msg(ptr_msg);
+                //printf("\n\n");
+                printf("%s,%d:not Implement this msg pgn:%d\n", __FILE__, __LINE__, ptr_msg->pgn); 
                 return 0;
             }
     }

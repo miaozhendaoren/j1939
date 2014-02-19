@@ -50,7 +50,7 @@ typedef struct _MSG{
     UINT8  ps;
     UINT8  p;
     UINT32 pgn;
-    INT8  data[MSG_MAX_LENGTH];
+    UINT8  data[MSG_MAX_LENGTH];
 }MSG;
 
 /* GUI层(QT)请求诊断时获取的消息结构 */

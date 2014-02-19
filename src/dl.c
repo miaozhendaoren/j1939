@@ -47,8 +47,8 @@ extern void parse_pdu(MSG *ptr_msg, const PDU *ptr_pdu, INT32 length)
     for(i=0;i<ptr_msg->data_length;i++)
     {
         ptr_msg->data[i] = ptr_pdu->data[i];
-    }
-
+    } 
+    
     return;
 }
 
