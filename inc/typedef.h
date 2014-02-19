@@ -1,6 +1,8 @@
 #ifndef _TYPEDEF_H_
 #define _TYPEDEF_H_
 
+#include <pthread.h>
+
 #include "config.h"
 
 /*=================================  类型定义 ==========================================*/

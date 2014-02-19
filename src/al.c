@@ -190,7 +190,7 @@ static INT32 parse_msg(RECVED_MSG *ptr_recved_msg, const MSG *ptr_msg)
         default:
             {
                 printf("%s,%d:not Implement this msg pgn:%d\n", __FILE__, __LINE__, ptr_msg->pgn);
-                return EINVAL;
+                return 0;
             }
     }
 
