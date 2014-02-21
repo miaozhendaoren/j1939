@@ -1,0 +1,14 @@
+clutch status:         0
+engine speed:          100.680
+fule press:            4
+total distance:        3
+total fule use:        4
+water temperature:     7
+oil press:             5
+speed:                 97
+instantaneous fule use:11
+air press:             19
+dtc:
+dtc.spn:               0
+dtc.fmi:               0
+dtc.oc:                0

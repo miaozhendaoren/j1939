@@ -1,5 +1,5 @@
-#OBJ=IMX
-OBJ=PC
+OBJ=IMX
+#OBJ=PC
 
 ROOT_DIR=/home/pp/j1939
 INC=${ROOT_DIR}/inc

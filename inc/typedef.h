@@ -62,6 +62,7 @@ typedef struct _DTC{
 
 /* GUI层(QT)接收的消息结构 */
 typedef struct _RECVED_MSG{
+    BOOL  clutch;                 /* clutch status */
     F32   engine_speed;           /* engine speed */
     INT32 fule_press;             /* fule press */
     INT32 total_distance;         /* vehicle distance */

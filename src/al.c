@@ -193,11 +193,11 @@ static INT32 parse_msg(RECVED_MSG *ptr_recved_msg, const MSG *ptr_msg)
                 int press = (0x40 & ptr_msg->data[5]);
                 if(press)
                 {
-                    printf("clutch down.\n");
+                    ptr_recved_msg->clutch = true;
                 }
                 else
                 {
-                    printf("clutch up.\n");
+                    ptr_recved_msg->clutch = false;
                 }
                 break;
             }
@@ -205,7 +205,7 @@ static INT32 parse_msg(RECVED_MSG *ptr_recved_msg, const MSG *ptr_msg)
             {
                 //print_msg(ptr_msg);
                 //printf("\n\n");
-                printf("%s,%d:not Implement this msg pgn:%d\n", __FILE__, __LINE__, ptr_msg->pgn); 
+                //printf("%s,%d:not Implement this msg pgn:%d\n", __FILE__, __LINE__, ptr_msg->pgn); 
                 return 0;
             }
     }
@@ -215,6 +215,7 @@ static INT32 parse_msg(RECVED_MSG *ptr_recved_msg, const MSG *ptr_msg)
 
 extern void print_recved_msg(const RECVED_MSG *ptr_recved_msg)
 {
+    printf("clutch status:         %d\n", ptr_recved_msg->clutch);
     printf("engine speed:          %.3f\n", ptr_recved_msg->engine_speed);
     printf("fule press:            %d\n", ptr_recved_msg->fule_press);
     printf("total distance:        %d\n", ptr_recved_msg->total_distance);
