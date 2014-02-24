@@ -295,14 +295,14 @@ static INT32 parse_msg(RECVED_MSG *ptr_recved_msg, const MSG *ptr_msg)
 
 extern void print_recved_msg(const RECVED_MSG *ptr_recved_msg)
 {
-    printf("1:里程:%.5f\n", ptr_recved_msg->total_distance);
-    printf("2:车速:%.5f\n", ptr_recved_msg->speed);
-    printf("3:转速:%.5f\n", ptr_recved_msg->roate_speed);
+    printf("1:里程:%.2f\n", ptr_recved_msg->total_distance);
+    printf("2:车速:%.2f\n", ptr_recved_msg->speed);
+    printf("3:转速:%.2f\n", ptr_recved_msg->roate_speed);
     printf("4:水温:%d℃ \n", ptr_recved_msg->water_temperature);
     printf("5:剩余油量:%d%%\n", ptr_recved_msg->oil_left);
-    printf("6:瞬时油效:%.5f\n", ptr_recved_msg->oil_valid);
-    printf("7:油耗速度:%.5f\n", ptr_recved_msg->oil_used);
-    printf("8:累计油耗:%.5f\n", ptr_recved_msg->total_oil_use);
+    printf("6:瞬时油效:%.2f\n", ptr_recved_msg->oil_valid);
+    printf("7:油耗速度:%.2f\n", ptr_recved_msg->oil_used);
+    printf("8:累计油耗:%.2f\n", ptr_recved_msg->total_oil_use);
     printf("8:机油压力:%d\n\n", ptr_recved_msg->oil_press);
     return;
 }
