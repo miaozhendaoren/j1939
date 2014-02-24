@@ -166,46 +166,126 @@ static INT32 build_msg(MSG *ptr_msg, SENDDED_MSG_TYPE type)
     return 0;
 }
 
+/*
+ * 实现协议         PGN          byte       精度
+3、转速             62980        5-6        0.125(rpm) / bit
+4、水温             62980        3-4        1(℃) / bit
+
+5、剩余油量         62980        0          (百分数) / bit
+6、即时燃油经济性   62978        3-4        1/512 (km/kg) /bit
+7、燃油消耗速度     62978        5-6        0.05(L/h) / bit
+8、累计油耗         62981        0-3        0.5(L) / bit
+
+9、机油压力         62979        0-1        4(kpa) / bit
+*/
 
 static INT32 parse_msg(RECVED_MSG *ptr_recved_msg, const MSG *ptr_msg)
 {
     switch(ptr_msg->pgn)
     {
+        case REQUEST_PGN:
+            {
+                break;
+            }
+        case DECLARE_ADDR_PGN:
+            {
+                break;
+            }
         case EEC1_PGN:
             {
-                /* 定义见SPN190 */
-                ptr_recved_msg->engine_speed = 32 * ptr_msg->data[4]
-                    + 0.125 * ptr_msg->data[3];
+                break;
+            }
+        case TP_PGN:
+            {
+                break;
+            }
+        case DISTANCE_PGN:
+            {
 
-#if (DEBUG_DETAIL & PP_DEBUG)
-                printf("%s,%d:parse a EEC1_PGN, get engine speed is:%.3f\n",
-                        __FILE__, __LINE__, ptr_recved_msg->engine_speed);
-#endif
+                /* 1、里程             62977        0-3        0.1(km)/bit */
+                F32 distance = 0;
+                distance = ptr_msg->data[3] << 24;
+                distance += ptr_msg->data[2] << 16;
+                distance += ptr_msg->data[1] << 8;
+                distance += ptr_msg->data[0];
+                ptr_recved_msg->total_distance = distance;
+                break;
+            }
+        case SPEED_PGN:
+            {
+                /* 2、车速             62980        1-2        1/256(km/h) / bit */
+                F32 speed = 0;
+                speed = ptr_msg->data[1] << 8;
+                speed += ptr_msg->data[0];
+                speed /= 256.0;
+                ptr_recved_msg->speed = speed;
+
+                /* 3、转速             62980        5-6        0.125(rpm) / bit */
+                F32 roate_speed = 0;
+                roate_speed = ptr_msg->data[6] << 8;
+                roate_speed += ptr_msg->data[5];
+                roate_speed /= 8.0;
+                ptr_recved_msg->roate_speed = roate_speed;
+
+                /* 4、水温             62980        3-4        1(℃) / bit */
+                INT32 water_temperature = 0;
+                water_temperature = ptr_msg->data[4] << 8;
+                water_temperature += ptr_msg->data[3];
+                ptr_recved_msg->water_temperature = water_temperature;
+
+                /* 5、剩余油量         62980        0          (百分数) / bit */
+                UINT8 oil_left = 0;
+                oil_left = ptr_msg->data[0];
+                ptr_recved_msg->oil_left = oil_left;
 
                 break;
             }
-        case REQUEST_PGN:
-        case DECLARE_ADDR_PGN:
-        case TP_PGN:
-        case CLUTCH_PGN:
+        case OIL_PGN:
             {
-                /* pgn 598 */
-                int press = (0x40 & ptr_msg->data[5]);
-                if(press)
-                {
-                    ptr_recved_msg->clutch = true;
-                }
-                else
-                {
-                    ptr_recved_msg->clutch = false;
-                }
+                /* 6、即时燃油经济性   62978        3-4        1/512 (km/kg) /bit */
+                F32 oil_valid;
+                oil_valid = ptr_msg->data[4] << 8;
+                oil_valid += ptr_msg->data[3];
+                oil_valid /= 512;
+                ptr_recved_msg->oil_valid = oil_valid;
+               
+                /* 7、燃油消耗速度     62978        5-6        0.05(L/h) / bit */
+                F32 oil_used;
+                oil_used = ptr_msg->data[6] << 8;
+                oil_used += ptr_msg->data[5];
+                oil_used /= 20.0;
+                ptr_recved_msg->oil_used = oil_used;
+
+                break;
+            }
+        case OIL_USED_PGN:
+            {
+                /* 8、累计油耗         62981        0-3        0.5(L) / bit */
+                F32 total_oil_use;
+                total_oil_use = ptr_msg->data[3] << 24;
+                total_oil_use += ptr_msg->data[2] << 16;
+                total_oil_use += ptr_msg->data[1] << 8;
+                total_oil_use += ptr_msg->data[0];
+                total_oil_use /= 2.0;
+                ptr_recved_msg->total_oil_use = total_oil_use;
+
+                /* 9、机油压力         62979        0-1        4(kpa) / bit */
+                INT32 oil_press;
+                oil_press = ptr_msg->data[1] << 8;
+                oil_press += ptr_msg->data[0];
+                oil_press *= 4;
+                ptr_recved_msg->oil_press = oil_press;
+
+                break;
+            }
+        case OIL_PRESS_PGN:
+            {
                 break;
             }
         default:
             {
-                //print_msg(ptr_msg);
-                //printf("\n\n");
-                //printf("%s,%d:not Implement this msg pgn:%d\n", __FILE__, __LINE__, ptr_msg->pgn); 
+                /* TODO: 当有符合应用层标准的数据时，加入错误检查 */
+                // printf("%s,%d:not Implement this msg pgn:%d\n", __FILE__, __LINE__, ptr_msg->pgn); 
                 return 0;
             }
     }
@@ -215,21 +295,15 @@ static INT32 parse_msg(RECVED_MSG *ptr_recved_msg, const MSG *ptr_msg)
 
 extern void print_recved_msg(const RECVED_MSG *ptr_recved_msg)
 {
-    printf("clutch status:         %d\n", ptr_recved_msg->clutch);
-    printf("engine speed:          %.3f\n", ptr_recved_msg->engine_speed);
-    printf("fule press:            %d\n", ptr_recved_msg->fule_press);
-    printf("total distance:        %d\n", ptr_recved_msg->total_distance);
-    printf("total fule use:        %d\n", ptr_recved_msg->total_fule_use);
-    printf("water temperature:     %d\n", ptr_recved_msg->water_temperature);
-    printf("oil press:             %d\n", ptr_recved_msg->oil_press);
-    printf("speed:                 %d\n", ptr_recved_msg->speed);
-    printf("instantaneous fule use:%d\n", ptr_recved_msg->instan_fule_use);
-    printf("air press:             %d\n", ptr_recved_msg->air_press);
-    printf("dtc:\n");
-    printf("dtc.spn:               %d\n", ptr_recved_msg->dtc.spn);
-    printf("dtc.fmi:               %d\n", ptr_recved_msg->dtc.fmi);
-    printf("dtc.oc:                %d\n", ptr_recved_msg->dtc.oc);
-
+    printf("1:里程:%.5f\n", ptr_recved_msg->total_distance);
+    printf("2:车速:%.5f\n", ptr_recved_msg->speed);
+    printf("3:转速:%.5f\n", ptr_recved_msg->roate_speed);
+    printf("4:水温:%d℃ \n", ptr_recved_msg->water_temperature);
+    printf("5:剩余油量:%d%%\n", ptr_recved_msg->oil_left);
+    printf("6:瞬时油效:%.5f\n", ptr_recved_msg->oil_valid);
+    printf("7:油耗速度:%.5f\n", ptr_recved_msg->oil_used);
+    printf("8:累计油耗:%.5f\n", ptr_recved_msg->total_oil_use);
+    printf("8:机油压力:%d\n\n", ptr_recved_msg->oil_press);
     return;
 }
 

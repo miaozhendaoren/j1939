@@ -62,17 +62,15 @@ typedef struct _DTC{
 
 /* GUI层(QT)接收的消息结构 */
 typedef struct _RECVED_MSG{
-    BOOL  clutch;                 /* clutch status */
-    F32   engine_speed;           /* engine speed */
-    INT32 fule_press;             /* fule press */
-    INT32 total_distance;         /* vehicle distance */
-    INT32 total_fule_use;         /* total fule use */
-    INT32 water_temperature;      /* water temperature */
-    INT32 oil_press;              /* oil press */
-    INT32 speed;                  /* vehicle speed */
-    INT32 instan_fule_use;        /* instantaneous fule use */
-    INT32 air_press;              /* air press */
-    DTC   dtc;                    /* DTC(诊断故障代码) */
+    F32 total_distance;             /* 1、里程             62977        0-3        0.1(km)/bit */
+    F32 speed;                      /* 2、车速             62980        1-2        1/256(km/h) / bit */
+    F32 roate_speed;                /* 3、转速             62980        5-6        0.125(rpm) / bit */
+    INT32 water_temperature;        /* 4、水温             62980        3-4        1(℃) / bit */
+    UINT8 oil_left;                 /* 5、剩余油量         62980        0          (百分数) / bit */
+    F32 oil_valid;                  /* 6、即时燃油经济性   62978        3-4        1/512 (km/kg) /bit */
+    F32 oil_used;                   /* 7、燃油消耗速度     62978        5-6        0.05(L/h) / bit */
+    F32 total_oil_use;              /* 8、累计油耗         62981        0-3        0.5(L) / bit */
+    INT32 oil_press;                /* 9、机油压力         62979        0-1        4(kpa) / bit */
 }RECVED_MSG;
 
 /* 链路层PDU */

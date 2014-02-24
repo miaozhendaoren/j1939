@@ -12,6 +12,11 @@
 
 /* 离合器 */
 #define CLUTCH_PGN              (65265)
+#define DISTANCE_PGN            (62977)
+#define SPEED_PGN               (62980)
+#define OIL_PGN                 (62978)
+#define OIL_USED_PGN            (62981)
+#define OIL_PRESS_PGN           (62979)
 
 /* ECU地址 */
 #define PLATFORM_ADDR           (28)

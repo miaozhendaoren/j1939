@@ -61,8 +61,6 @@ static void parse_a_line(const char *buf_line)
 
     /* TODO：使用真实的CAN数据而非此处模拟的数据 */
     make_simulating_data(&recv_msg);
-    printf("\n");
-
     print_recved_msg(&recv_msg);
 }
 
@@ -101,16 +99,14 @@ static void make_can_from_text(CAN *can, const char *buf_line)
 
 static void make_simulating_data(RECVED_MSG *recv_msg)
 {
-    /* recv_msg->clutch = up; */
-    recv_msg->engine_speed = 100 + 1 * randf();
-    recv_msg->fule_press = 5 + 2 * randf();
-    recv_msg->total_distance += (2 + 2 * randf());
-    recv_msg->total_fule_use += (3 + 2 * randf());
-    recv_msg->water_temperature = 6 + 2 * randf();
-    recv_msg->oil_press = 7 + 2 * randf();
-    recv_msg->speed = recv_msg->engine_speed + 10 * randf();
-    recv_msg->instan_fule_use = 10 + 2 * randf();
-    recv_msg->air_press = 20 + 2 * randf();
+    recv_msg->total_distance = 100 + randf();
+    recv_msg->speed = 90 + 10 * randf();
+    recv_msg->roate_speed = 50 + 10 * randf();
+    recv_msg->water_temperature = 70 + 5 * randf();
+    recv_msg->oil_left = 80;
+    recv_msg->oil_valid = 60 + 10 * randf();
+    recv_msg->total_oil_use = 150 + 5 * randf();
+    recv_msg->oil_press = 100 + 5 * randf();
 }
 
 static float randf(void)
