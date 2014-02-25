@@ -101,15 +101,17 @@ static void make_simulating_data(RECVED_MSG *recv_msg)
 {
     static F32 total_distance = 1000;
     static F32 total_oil_use = 500;
+    static F32 oil_left = 80;
 
     total_distance += randf() + 1;
     total_oil_use += 5 * (randf() + 1);
+    oil_left -= 0.11 * (randf() + 1);
 
     recv_msg->total_distance = total_distance;
     recv_msg->speed = 90 + 10 * randf();
     recv_msg->roate_speed = 50 + 10 * randf();
     recv_msg->water_temperature = 70 + 5 * randf();
-    recv_msg->oil_left = 80;
+    recv_msg->oil_left = oil_left;
     recv_msg->oil_valid = 60 + 10 * randf();
     recv_msg->oil_used = 1 + randf();
     recv_msg->total_oil_use = total_oil_use;
